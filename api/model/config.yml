@@ -1,0 +1,104 @@
+# ============================================================
+# Configuración del modelo de predicción de Subscription Status
+# ============================================================
+
+# Nombre del paquete
+package_name: modelo-subscription
+
+# Archivos de datos
+train_data_file: shopping_train.csv
+test_data_file: shopping_test.csv
+
+# ── Variable objetivo ────────────────────────────────────────
+target: Subscription Status
+
+# ── Columnas a eliminar en preprocesamiento ──────────────────
+drop_cols:
+  - Customer ID
+  - Item Purchased
+  - Discount Applied
+
+# ── Columnas con target leakage (se eliminan del X) ──────────
+leakage_cols:
+  - Promo Code Used
+
+# ── Features numéricas base (antes de feature engineering) ───
+numeric_features:
+  - Age
+  - Purchase Amount (USD)
+  - Review Rating
+  - Previous Purchases
+
+# ── Features categóricas para OHE ────────────────────────────
+categorical_features:
+  - Category
+  - Season
+  - Size
+  - Shipping Type
+  - Payment Method
+  - Region        # derivada de Location
+  - Color Group   # derivada de Color
+
+# ── Columnas finales del modelo (34 features) ────────────────
+model_features:
+  - Age
+  - Purchase Amount (USD)
+  - Review Rating
+  - Previous Purchases
+  - Has_Discount
+  - Gender_Is_Male
+  - Frequency_Numeric
+  - Age_x_Freq
+  - Total_Engagement
+  - Category_Clothing
+  - Category_Footwear
+  - Category_Outerwear
+  - Season_Spring
+  - Season_Summer
+  - Season_Winter
+  - Size_M
+  - Size_S
+  - Size_XL
+  - Shipping Type_Express
+  - Shipping Type_Free Shipping
+  - Shipping Type_Next Day Air
+  - Shipping Type_Standard
+  - Shipping Type_Store Pickup
+  - Payment Method_Cash
+  - Payment Method_Credit Card
+  - Payment Method_Debit Card
+  - Payment Method_PayPal
+  - Payment Method_Venmo
+  - Region_Northeast
+  - Region_Southeast
+  - Region_Southwest
+  - Region_West
+  - Color Group_Neutral
+  - Color Group_Warm
+
+# ── Mapeos ───────────────────────────────────────────────────
+freq_map:
+  Weekly: 52
+  Fortnightly: 26
+  Bi-Weekly: 26
+  Monthly: 12
+  Every 3 Months: 4
+  Quarterly: 4
+  Annually: 1
+
+# Mapeo de variable objetivo
+qual_mappings:
+  "Yes": 1
+  "No": 0
+
+# ── Pipeline ─────────────────────────────────────────────────
+pipeline_name: modelo-subscription
+pipeline_save_file: modelo-subscription-output-
+
+# ── Split y reproducibilidad ─────────────────────────────────
+test_size: 0.2
+random_state: 42
+
+# ── Hiperparámetros Logistic Regression (mejor modelo) ───────
+lr_max_iter: 1000
+lr_c: 1.0

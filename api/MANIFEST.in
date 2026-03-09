@@ -1,0 +1,5 @@
+include model/VERSION
+include model/config.yml
+recursive-include model/datasets *.csv
+recursive-include model/trained *.pkl
+recursive-include requirements *.txt
