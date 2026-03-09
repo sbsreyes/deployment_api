@@ -1,0 +1,65 @@
+# docker-compose.yml — Subscription Status Predictor API
+# =========================================================
+#
+# Docker Compose orquesta uno o más contenedores.
+# Aquí solo tenemos uno (la API), pero la estructura permite
+# agregar fácilmente una base de datos, un dashboard, etc.
+#
+# COMANDOS ÚTILES:
+#
+#   Construir y arrancar (primer uso o después de cambios):
+#     docker-compose up --build
+#
+#   Arrancar sin reconstruir (si la imagen ya existe):
+#     docker-compose up
+#
+#   Arrancar en segundo plano (modo daemon):
+#     docker-compose up -d
+#
+#   Ver logs en tiempo real:
+#     docker-compose logs -f
+#
+#   Detener:
+#     docker-compose down
+#
+#   Ver estado de los contenedores:
+#     docker-compose ps
+
+version: "3.9"
+
+services:
+
+  # ── Servicio: API ───────────────────────────────────────────────────────────
+  api:
+    # Nombre del contenedor (aparece en docker ps)
+    container_name: subscription-api
+
+    # Construir la imagen desde el Dockerfile en el directorio actual
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    # Mapeo de puertos: HOST:CONTENEDOR
+    # El puerto 8001 del host apunta al 8001 del contenedor.
+    # En EC2: accedes con http://IP_EC2:8001
+    ports:
+      - "8001:8001"
+
+    # Variables de entorno — sobreescriben los defaults del Dockerfile
+    environment:
+      - API_HOST=0.0.0.0
+      - API_PORT=8001
+
+    # Política de reinicio automático
+    # "unless-stopped" → el contenedor se reinicia solo si el servidor
+    # se reinicia, pero NO si lo detienes manualmente con docker stop.
+    restart: unless-stopped
+
+    # Health check — Docker verifica periódicamente que la API responda.
+    # Si falla 3 veces seguidas, Docker marca el contenedor como "unhealthy".
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/api/v1/health"]
+      interval: 30s     # chequea cada 30 segundos
+      timeout: 10s      # espera máximo 10 segundos la respuesta
+      retries: 3        # después de 3 fallos → unhealthy
+      start_period: 15s # espera 15s antes del primer chequeo (tiempo de arranque)

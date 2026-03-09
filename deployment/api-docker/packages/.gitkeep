@@ -1,0 +1,14 @@
+# carpeta packages/
+# ==================
+# Aquí va el .whl generado por model-package/.
+#
+# Después de correr en model-package/:
+#   tox run -e train
+#   tox run -e test_package
+#   python3 -m build
+#
+# Copiar el resultado acá:
+#   cp ../model-package/dist/model_subscription-0.0.1-py3-none-any.whl .
+#
+# El Dockerfile lo instala con:
+#   pip install packages/model_subscription-0.0.1-py3-none-any.whl

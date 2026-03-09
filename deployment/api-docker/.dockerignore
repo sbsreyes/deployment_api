@@ -1,0 +1,38 @@
+# .dockerignore
+# ==============
+# Archivos que Docker NO copia al build context.
+# Igual que .gitignore pero para Docker.
+# Reduce el tamaño del contexto y acelera el build.
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+
+# Entornos virtuales
+env/
+venv/
+.env/
+.venv/
+
+# Tests (no se necesitan en la imagen de producción)
+tests/
+
+# Control de versiones
+.git/
+.gitignore
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# Documentación
+*.md
+docs/
+
+# OS
+.DS_Store
+Thumbs.db
